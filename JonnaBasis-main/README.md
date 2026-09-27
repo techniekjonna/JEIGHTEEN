@@ -1,4 +1,0 @@
-# JonnaBasis
-
-
-HAHAHAA SUCCES GEEN RIEDMIE
