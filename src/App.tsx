@@ -1,39 +1,26 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { DashboardLayout } from './components/layout/DashboardLayout';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { DashboardPage } from './pages/DashboardPage';
-import { ProjectenPage } from './pages/ProjectenPage';
-import { InstellingenPage } from './pages/InstellingenPage';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from './theme/ThemeContext';
+import { ShopProvider } from './pages/atelier/ShopContext';
+import { ScrollToTop } from './components/ScrollToTop';
+import { LandingPage } from './pages/LandingPage';
+import { MusicPage } from './pages/MusicPage';
+import { AtelierPage } from './pages/atelier/AtelierPage';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Routes>
-                    <Route index element={<DashboardPage />} />
-                    <Route path="projecten" element={<ProjectenPage />} />
-                    <Route path="instellingen" element={<InstellingenPage />} />
-                  </Routes>
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <ShopProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/atelier" element={<AtelierPage />} />
+            <Route path="/music" element={<MusicPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </ShopProvider>
+    </ThemeProvider>
   );
 }
 
