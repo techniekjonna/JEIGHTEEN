@@ -5,13 +5,16 @@ interface DrawerProps {
   open: boolean;
   onClose: () => void;
   side?: 'left' | 'right';
+  /** Accessible name; also the visible title unless `heading` is given. */
   label: string;
+  /** Replaces the text title in the header (the menu shows the monogram). */
+  heading?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
 }
 
 /** Slide-in panel used for the menu (left) and the bag (right). Closed state is `visibility:hidden`, so it is out of the tab order. */
-export function Drawer({ open, onClose, side = 'left', label, children, footer }: DrawerProps) {
+export function Drawer({ open, onClose, side = 'left', label, heading, children, footer }: DrawerProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const onCloseRef = useRef(onClose);
   useEffect(() => {
@@ -40,7 +43,7 @@ export function Drawer({ open, onClose, side = 'left', label, children, footer }
       <div className="drawer__scrim" onClick={onClose} aria-hidden="true" />
       <div className="drawer__panel" role="dialog" aria-modal="true" aria-label={label}>
         <div className="drawer__head">
-          <span className="drawer__title">{label}</span>
+          {heading ?? <span className="drawer__title">{label}</span>}
           <button ref={closeButton} type="button" className="icon-btn" onClick={onClose} aria-label={`Close ${label.toLowerCase()}`}>
             <X size={22} strokeWidth={1.25} />
           </button>

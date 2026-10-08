@@ -35,7 +35,23 @@
 .ahdr__side {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 1.8vw, 30px);
+  --gap: clamp(14px, 1.8vw, 30px);
+  gap: var(--gap);
+}
+/* While the search field is open it needs the room, so the site switch steps aside. */
+.ahdr__side:has(.ahdr__search) .siteswitch--bar {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .siteswitch--bar + .ahdr__desktop {
+    margin-left: 14px;
+  }
+}
+/* 1280–1439px: with the switch next to Menu there is only room for the search icon. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .ahdr__side .ahdr__btn--search span {
+    display: none;
+  }
 }
 .ahdr__side--end {
   justify-content: flex-end;
@@ -57,7 +73,7 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  --logo-w: clamp(124px, 11vw, 168px);
+  --logo-w: clamp(106px, 9.4vw, 144px);
 }
 .ahdr__sub {
   font-size: 11px;
@@ -200,6 +216,7 @@
   text-transform: uppercase;
 }
 .hero__title {
+  font-family: var(--font-display);
   font-size: clamp(30px, 3.3vw, 48px);
   font-weight: 300;
   letter-spacing: 0.01em;
@@ -240,6 +257,7 @@
   transition: background-color 0.35s ease;
 }
 .explore__title {
+  font-family: var(--font-display);
   max-width: 15em;
   margin: 0 auto clamp(40px, 5vw, 72px);
   text-align: center;
@@ -293,7 +311,8 @@
   font-size: 14px;
 }
 .tile__name {
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 500;
 }
 .tile__kind {
   margin-top: 2px;
@@ -342,7 +361,7 @@
     gap: 18px;
   }
   .ahdr__brand {
-    --logo-w: 118px;
+    --logo-w: 104px;
   }
   .ahdr__mobile {
     display: block;

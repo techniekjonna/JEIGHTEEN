@@ -28,7 +28,7 @@ export function AtelierPage() {
           JEIGHTEEN
         </Link>
       </footer>
-      <MenuDrawer open={menuOpen} onClose={closeMenu} />
+      <MenuDrawer open={menuOpen} onClose={closeMenu} site="/atelier" />
       <BagDrawer />
     </div>
   );
