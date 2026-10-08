@@ -1,0 +1,138 @@
+/* Tokens — day is the default, night is toggled via <html data-theme="night"> */
+:root,
+:root[data-theme='day'] {
+  --bg: #ffffff;
+  --fg: #0d0d0d;
+  --muted: #8c8c8c;
+  --line: #e6e6e6;
+  --tile-a: #f1f1f1;
+  --tile-b: #e4e4e4;
+  --scrim: rgba(0, 0, 0, 0.42);
+  color-scheme: light;
+}
+
+:root[data-theme='night'] {
+  --bg: #0b0b0b;
+  --fg: #f4f4f4;
+  --muted: #8c8c8c;
+  --line: #242424;
+  --tile-a: #1c1c1c;
+  --tile-b: #141414;
+  --scrim: rgba(0, 0, 0, 0.62);
+  color-scheme: dark;
+}
+
+:root {
+  /* Jost = open-source Futura-style geometric sans, closest free match to the reference. */
+  --font: 'Jost Variable', 'Futura', 'Century Gothic', 'Avenir Next', system-ui, sans-serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* Logo: black PNG used as a mask so it takes the current text colour. */
+.logo {
+  --mask: url('/jeighteen-logo.png');
+  display: block;
+  width: var(--logo-w, 160px);
+  aspect-ratio: 1803 / 318;
+  background-color: currentColor;
+  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+  mask: var(--mask) center / 100% 100% no-repeat;
+  transition: background-color 0.35s ease;
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+}
+
+/* Thin underlined text button, same treatment as "Watch the Show" in the reference. */
+.text-link {
+  align-self: flex-start;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  line-height: 1.2;
+}
+
+.btn {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--fg);
+  color: var(--bg);
+}
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Hairline underline that draws in on hover/focus. */
+.link-line {
+  position: relative;
+  display: inline-block;
+}
+.link-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
+}
+.link-line:hover::after,
+.link-line:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.theme-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+}
+.theme-switch button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 0;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.theme-switch button[aria-pressed='true'] {
+  background: var(--fg);
+  color: var(--bg);
+}
