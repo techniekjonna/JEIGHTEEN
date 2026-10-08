@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { Logo } from '../../components/Logo';
+import { SiteSwitch } from '../../components/SiteSwitch';
 import { atelierContent } from './content';
 import { useShop } from './ShopContext';
 import { scrollToCollection } from './scroll';
@@ -20,7 +21,7 @@ function SearchToggle() {
 
   if (!open) {
     return (
-      <button type="button" className="ahdr__btn" onClick={() => setOpen(true)}>
+      <button type="button" className="ahdr__btn ahdr__btn--search" onClick={() => setOpen(true)}>
         <Search {...ICON} />
         <span>Search</span>
       </button>
@@ -84,6 +85,7 @@ export function AtelierHeader({ onMenu }: { onMenu: () => void }) {
             <Menu {...ICON} />
             <span className="ahdr__label">Menu</span>
           </button>
+          <SiteSwitch className="siteswitch--bar" />
           <div className="ahdr__desktop">
             <SearchToggle />
           </div>

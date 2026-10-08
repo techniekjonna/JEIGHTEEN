@@ -51,7 +51,13 @@
   padding: 14px 20px 14px 28px;
   border-bottom: 1px solid var(--line);
 }
+.drawer__mark {
+  display: inline-flex;
+  align-items: center;
+  --mark-w: 26px; /* 26 × 36px: sits inside the 68px header with the same breathing room the MENU text had */
+}
 .drawer__title {
+  font-family: var(--font-display);
   font-size: 13px;
   font-weight: 300;
   letter-spacing: 0.2em;
@@ -73,9 +79,10 @@
   gap: 22px;
 }
 .menu-nav a {
+  font-family: var(--font-display);
   font-size: clamp(22px, 3vw, 28px);
   font-weight: 300;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   transition: opacity 0.25s ease;
 }
 .menu-nav a:hover {
@@ -110,6 +117,7 @@
   background: linear-gradient(160deg, var(--tile-a), var(--tile-b));
 }
 .bag__name {
+  font-family: var(--font-display);
   font-size: 15px;
 }
 .bag__kind {

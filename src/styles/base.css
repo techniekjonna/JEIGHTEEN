@@ -25,6 +25,9 @@
 :root {
   /* Jost = open-source Futura-style geometric sans, closest free match to the reference. */
   --font: 'Jost Variable', 'Futura', 'Century Gothic', 'Avenir Next', system-ui, sans-serif;
+  /* Headings and titles use the logo's typeface. Helvetica Neue is not bundled (commercial licence):
+     Apple devices render the real thing, everything else falls back to Helvetica / Arial. */
+  --font-display: 'Helvetica Neue', 'HelveticaNeue', Helvetica, 'Nimbus Sans', Arial, sans-serif;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -59,6 +62,59 @@ body {
   -webkit-mask: var(--mask) center / 100% 100% no-repeat;
   mask: var(--mask) center / 100% 100% no-repeat;
   transition: background-color 0.35s ease;
+}
+
+/* Monogram, same mask technique as the logo. */
+.mark {
+  --mask: url('/jeighteen-mark.png');
+  display: block;
+  width: var(--mark-w, 26px);
+  aspect-ratio: 1304 / 1780;
+  background-color: currentColor;
+  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+  mask: var(--mask) center / 100% 100% no-repeat;
+}
+
+/* JEIGHTEEN ATELIER | JEIGHTEEN MUSIC. Bold = the site you are on. */
+.siteswitch {
+  display: flex;
+  align-items: center;
+  gap: var(--gap, 16px);
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.siteswitch a {
+  font-weight: 400;
+}
+.siteswitch a[aria-current='page'] {
+  font-weight: 700;
+}
+.siteswitch__sep,
+.siteswitch--bar::before {
+  content: '';
+  width: 1px;
+  height: 14px;
+  background: currentColor;
+  opacity: 0.45;
+}
+.siteswitch--drawer {
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+/* In the banner next to Menu on wide screens; below that the same switch sits at the top of the menu. */
+.siteswitch--bar {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .siteswitch--bar {
+    display: flex;
+  }
+  .siteswitch--drawer {
+    display: none;
+  }
 }
 
 .icon-btn {

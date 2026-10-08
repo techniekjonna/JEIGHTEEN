@@ -10,7 +10,7 @@ export function MusicPage() {
 
   return (
     <div className="stage">
-      <SiteBar onMenu={() => setMenuOpen(true)} />
+      <SiteBar onMenu={() => setMenuOpen(true)} sites />
       <main className="stage__main">
         <h1 className="stage__logo">
           <Logo />
@@ -20,7 +20,7 @@ export function MusicPage() {
           <span className="stage__soon">Coming soon</span>
         </p>
       </main>
-      <MenuDrawer open={menuOpen} onClose={closeMenu} />
+      <MenuDrawer open={menuOpen} onClose={closeMenu} site="/music" />
     </div>
   );
 }
