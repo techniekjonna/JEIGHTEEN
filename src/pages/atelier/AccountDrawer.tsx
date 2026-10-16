@@ -12,7 +12,7 @@ import { SignInForm } from '../dashboard/SignInForm';
  */
 export function AccountDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const t = useT();
-  const { status, email } = useAdmin('atelier');
+  const { status, email, uid } = useAdmin('atelier');
 
   const toDashboard = (
     <Link to="/atelier/dashboard" className="btn account__btn" onClick={onClose}>
@@ -50,8 +50,14 @@ export function AccountDrawer({ open, onClose }: { open: boolean; onClose: () =>
     body = (
       <div className="account">
         <p className="account__text">
-          {t(`Signed in as ${email}. This account has no access to the atelier.`, `Ingelogd als ${email}. Dit account heeft geen toegang tot het atelier.`)}
+          {t(`Signed in as ${email}. This account has no access to the atelier dashboard yet.`, `Ingelogd als ${email}. Dit account heeft nog geen toegang tot het atelier-dashboard.`)}
         </p>
+        {uid && (
+          <p className="account__text">
+            {t('Your user ID (for the owner):', 'Je gebruikers-ID (voor de beheerder):')}{' '}
+            <code className="account__uid">{uid}</code>
+          </p>
+        )}
         {signOut}
       </div>
     );
