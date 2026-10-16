@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Logo } from '../../components/Logo';
 import { LanguageToggle } from '../../components/LanguageToggle';
-import { categories, categoryPath } from '../../data/categories';
+import { categoryPath, useCategories } from '../../data/categories';
 import { useT } from '../../i18n/LanguageContext';
 import { useShop } from './ShopContext';
 
@@ -9,7 +9,7 @@ import { useShop } from './ShopContext';
 export function AtelierFooter() {
   const t = useT();
   const { setBagOpen, products } = useShop();
-  const shop = categories.filter((c) => !c.kind || products.some((p) => p.kind === c.kind));
+  const shop = useCategories().filter((c) => !c.kind || products.some((p) => p.kind === c.kind));
 
   return (
     <footer className="afoot" id="contact">

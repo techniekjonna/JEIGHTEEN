@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, NavLink, useParams } from 'react-router-dom';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { Drawer } from '../../components/Drawer';
-import { categories, categoryBySlug, categoryPath, inCategory } from '../../data/categories';
+import { categoryBySlug, categoryPath, inCategory, useCategories, useCategoriesReady } from '../../data/categories';
 import { isSoldOut } from '../../data/products';
 import { useT } from '../../i18n/LanguageContext';
 import { AtelierLayout } from './AtelierLayout';
@@ -15,7 +15,9 @@ const PAGE = 24;
 /** Category page, laid out like the reference: title and count, a row of categories, a sticky bar with filter and sort, the grid and "load more". */
 export function CategoryPage() {
   const { slug } = useParams();
-  const category = categoryBySlug(slug);
+  const categories = useCategories();
+  const categoriesReady = useCategoriesReady();
+  const category = categoryBySlug(categories, slug);
   const t = useT();
   const { products, loaded, query, setQuery } = useShop();
   const [sort, setSort] = useState<Sort>('new');
@@ -34,6 +36,7 @@ export function CategoryPage() {
     return items;
   }, [products, category, available, q, sort]);
 
+  if (!category && !categoriesReady) return <AtelierLayout><p className="grid__empty">{t('Loading…', 'Laden…')}</p></AtelierLayout>;
   if (!category) return <Navigate to="/atelier" replace />;
 
   const name = t(category.en, category.nl);

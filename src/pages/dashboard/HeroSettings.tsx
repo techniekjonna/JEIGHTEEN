@@ -50,7 +50,7 @@ function MediaField({ value, set, onBusy, label }: { value: Hero; set: (patch: P
           </button>
         )}
       </div>
-      <input ref={input} type="file" accept="video/mp4,video/webm,video/quicktime,image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />
+      <input ref={input} type="file" accept="video/mp4,video/webm,video/quicktime,image/*,.heic,.heif" hidden onChange={(e) => pick(e.target.files?.[0])} />
       <p className="dfield__hint">Film: mp4, liefst kort en onder 30 MB, dan laadt hij snel. Foto: liggend werkt het best.</p>
       {error && <p className="dform__error">{error}</p>}
     </div>
@@ -205,7 +205,7 @@ export function HeroSettings() {
     <section className="dhero" aria-labelledby="dhero-title">
       <div className="dlist__head">
         <div>
-          <h2 id="dhero-title" className="dlist__title">Voorpagina</h2>
+          <h1 id="dhero-title" className="dlist__title">Voorpagina</h1>
           <p className="dlist__count">De films en foto's op je ATELIER-pagina, elk met tekst en een knop met optionele link.</p>
         </div>
       </div>

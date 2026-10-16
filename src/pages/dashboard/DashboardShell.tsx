@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { ArrowUpRight, LogOut } from 'lucide-react';
 import { Logo } from '../../components/Logo';
 import { firebaseReady } from '../../lib/firebase';
@@ -12,8 +12,14 @@ const SITE: Record<Brand, { path: string; title: string }> = {
   music: { path: '/music', title: 'Music dashboard' },
 };
 
+export interface DashPage {
+  to: string;
+  label: string;
+  end?: boolean;
+}
+
 /** Frame for one brand's dashboard. No link to the other brand: they are managed separately. */
-export function DashboardShell({ brand, children }: { brand: Brand; children: ReactNode }) {
+export function DashboardShell({ brand, pages = [], children }: { brand: Brand; pages?: DashPage[]; children: ReactNode }) {
   const site = SITE[brand];
 
   useEffect(() => {
@@ -48,6 +54,15 @@ export function DashboardShell({ brand, children }: { brand: Brand; children: Re
           )}
         </nav>
       </header>
+      {pages.length > 0 && (
+        <nav className="dash__nav" aria-label="Onderdelen van het dashboard">
+          {pages.map((p) => (
+            <NavLink key={p.to} to={p.to} end={p.end} className="dash__navlink">
+              {p.label}
+            </NavLink>
+          ))}
+        </nav>
+      )}
       {!firebaseReady && (
         <p className="dash__demo">
           Proefmodus: er is nog geen database gekoppeld. Wat je hier toevoegt, staat alleen in deze browser.

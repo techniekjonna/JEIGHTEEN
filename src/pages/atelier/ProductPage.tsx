@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Heart, ChevronRight, PenTool } from 'lucide-react';
 import { formatPrice, isSoldOut, productPhotos, productRef, type Product } from '../../data/products';
-import { categoryOfKind, categoryPath } from '../../data/categories';
+import { categoryOfKind, categoryPath, useCategories } from '../../data/categories';
 import { useT } from '../../i18n/LanguageContext';
 import { AtelierLayout } from './AtelierLayout';
 import { Carousel } from './Carousel';
@@ -76,6 +76,7 @@ export function ProductPage() {
   const t = useT();
   const { products, loaded, add, wishlist, toggleWish } = useShop();
   const product = products.find((p) => p.id === id);
+  const categories = useCategories();
   const [recent, setRecent] = useState<string[]>(readRecent);
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export function ProductPage() {
     );
   }
 
-  const category = categoryOfKind(product.kind);
+  const category = categoryOfKind(categories, product.kind);
   const wished = wishlist.has(product.id);
   const soldOut = isSoldOut(product);
   const fewLeft = product.stock !== undefined && product.stock > 0 && product.stock <= 3;

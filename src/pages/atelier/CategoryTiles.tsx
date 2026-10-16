@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { categories, categoryPath, inCategory } from '../../data/categories';
+import { categoryPath, inCategory, useShopCategories } from '../../data/categories';
 import { productPhotos } from '../../data/products';
 import { useT } from '../../i18n/LanguageContext';
 import { useShop } from './ShopContext';
@@ -8,8 +8,7 @@ import { useShop } from './ShopContext';
 export function CategoryTiles() {
   const t = useT();
   const { products } = useShop();
-  const tiles = categories
-    .filter((c) => c.kind)
+  const tiles = useShopCategories()
     .map((c) => {
       const items = products.filter((p) => inCategory(c, p));
       const photo = items.map((p) => productPhotos(p)[0]).find(Boolean);

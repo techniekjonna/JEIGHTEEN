@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
-import { categories, type SitePath } from '../data/navigation';
+import { useSiteCategories, type SitePath } from '../data/navigation';
 import { Drawer } from './Drawer';
 import { Mark } from './Mark';
 import { SiteSwitch } from './SiteSwitch';
@@ -22,6 +22,7 @@ interface MenuDrawerProps {
 /** The site-wide menu. The monogram in the header links home. */
 export function MenuDrawer({ open, onClose, site, side = 'right' }: MenuDrawerProps) {
   const t = useT();
+  const siteCategories = useSiteCategories(site ?? '/music');
   const heading = (
     <Link to="/" className="drawer__mark" onClick={onClose} aria-label="JEIGHTEEN, home">
       <Mark />
@@ -38,7 +39,7 @@ export function MenuDrawer({ open, onClose, site, side = 'right' }: MenuDrawerPr
             <NavLink to="/" end onClick={onClose}>
               Home
             </NavLink>
-            {categories[site].map((item) => (
+            {siteCategories.map((item) => (
               <NavLink key={item.to} to={item.to} onClick={onClose}>
                 {t(item.label, item.nl ?? item.label)}
               </NavLink>

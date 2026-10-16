@@ -92,7 +92,7 @@ export function UserManager() {
     <section className="dhero dusers" aria-labelledby="dusers-title">
       <div className="dlist__head">
         <div>
-          <h2 id="dusers-title" className="dlist__title">Gebruikers</h2>
+          <h1 id="dusers-title" className="dlist__title">Gebruikers</h1>
           <p className="dlist__count">
             {accounts ? `${accounts.length} ${accounts.length === 1 ? 'account' : 'accounts'}, waarvan ${admins} ${admins === 1 ? 'beheerder' : 'beheerders'}.` : 'Accounts laden…'}{' '}
             Een beheerder kan in dit dashboard.

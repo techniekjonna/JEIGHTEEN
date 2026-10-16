@@ -21,7 +21,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/music" element={<MusicPage />} />
-            <Route path="/atelier/dashboard" element={<AtelierDashboard />} />
+            <Route path="/atelier/dashboard/*" element={<AtelierDashboard />} />
             <Route path="/atelier/product/:id" element={<ProductPage />} />
             <Route path="/atelier/:slug" element={<CategoryPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />

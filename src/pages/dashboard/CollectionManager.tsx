@@ -21,11 +21,13 @@ interface Props<T extends Entry> {
   validate: (item: T) => string | null;
   emptyText: string;
   thumbRatio?: string;
+  /** A large "add new" block at the top of the page. */
+  cta?: { title: string; text: string };
   Form: ComponentType<FormProps<T>>;
 }
 
 /** List + editor for one collection. Both dashboards use it, each with its own collection. */
-export function CollectionManager<T extends Entry>({ brand, collection, heading, noun, blank, row, validate, emptyText, thumbRatio = '4 / 5', Form }: Props<T>) {
+export function CollectionManager<T extends Entry>({ brand, collection, heading, noun, blank, row, validate, emptyText, thumbRatio = '4 / 5', cta, Form }: Props<T>) {
   const [items, setItems] = useState<T[] | null>(null);
   const [error, setError] = useState('');
   const [draft, setDraft] = useState<T | null>(null);
@@ -72,19 +74,33 @@ export function CollectionManager<T extends Entry>({ brand, collection, heading,
 
   return (
     <section className="dlist">
+      {cta && (
+        <div className="dcta">
+          <div>
+            <h1 className="dcta__title">{cta.title}</h1>
+            <p className="dcta__text">{cta.text}</p>
+          </div>
+          <button type="button" className="dbtn dbtn--big" onClick={() => edit()}>
+            <Plus size={20} strokeWidth={1.5} />
+            Nieuw {noun} toevoegen
+          </button>
+        </div>
+      )}
       <div className="dlist__head">
         <div>
-          <h1 className="dlist__title">{heading}</h1>
+          {cta ? <h2 className="dlist__title">{heading}</h2> : <h1 className="dlist__title">{heading}</h1>}
           {items && (
             <p className="dlist__count">
               {items.length} {items.length === 1 ? noun : `${noun}s`} · {live} online
             </p>
           )}
         </div>
-        <button type="button" className="dbtn" onClick={() => edit()}>
-          <Plus size={18} strokeWidth={1.5} />
-          Nieuw {noun}
-        </button>
+        {!cta && (
+          <button type="button" className="dbtn" onClick={() => edit()}>
+            <Plus size={18} strokeWidth={1.5} />
+            Nieuw {noun}
+          </button>
+        )}
       </div>
 
       {error && <p className="dform__error" role="alert">{error}</p>}

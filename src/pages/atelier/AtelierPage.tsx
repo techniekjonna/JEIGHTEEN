@@ -6,7 +6,7 @@ import { AtelierLayout } from './AtelierLayout';
 import { atelierContent } from './content';
 import { useShop } from './ShopContext';
 import { useT } from '../../i18n/LanguageContext';
-import { allCategory, categories, categoryPath, inCategory } from '../../data/categories';
+import { allCategory, categoryPath, inCategory, useShopCategories } from '../../data/categories';
 
 /**
  * ATELIER homepage, laid out like the reference homepage:
@@ -17,13 +17,13 @@ import { allCategory, categories, categoryPath, inCategory } from '../../data/ca
 export function AtelierPage() {
   const t = useT();
   const { products, loaded } = useShop();
+  const categories = useShopCategories();
 
   const newest = products.slice(0, 4);
   const shown = new Set(newest.map((p) => p.id));
 
   // Second row: the category with the most pieces, without repeating the first row.
   const ranked = categories
-    .filter((c) => c.kind)
     .map((c) => ({ c, items: products.filter((p) => inCategory(c, p) && !shown.has(p.id)) }))
     .sort((a, b) => b.items.length - a.items.length);
   const top = ranked[0]?.items.length ? ranked[0] : undefined;

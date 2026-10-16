@@ -2,7 +2,7 @@ import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from 'fi
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { demoProducts } from '../data/products';
 import { firebase, firebaseReady } from './firebase';
-import { blobToDataUrl, shrinkImage } from './image';
+import { baseName, blobToDataUrl, isImageFile, shrinkImage } from './image';
 import { CloudNotSet, uploadToCloud } from './cloudUpload';
 
 /**
@@ -100,14 +100,14 @@ export async function removeEntry(c: CollectionName, id: string): Promise<void> 
   await deleteDoc(doc(firebase().db, c, id));
 }
 
-/** Shrinks the photo, stores it in ownCloud (or Firebase Storage as fallback) and returns a public URL. */
+/** Converts (HEIC to JPG), shrinks the photo, stores it in ownCloud (or Firebase Storage as fallback) and returns a public URL. */
 export async function uploadImage(brand: Brand, file: File, opts: { folder?: string; maxSize?: number } = {}): Promise<string> {
-  if (!file.type.startsWith('image/')) throw new Error('Kies een afbeelding (jpg, png of webp).');
+  if (!isImageFile(file)) throw new Error(`"${file.name}" is geen foto. Kies een JPG, PNG, WEBP of HEIC.`);
   const maxSize = opts.maxSize ?? 1800;
   if (!firebaseReady) return blobToDataUrl(await shrinkImage(file, Math.min(maxSize, 1200), 0.72));
   const blob = await shrinkImage(file, maxSize, 0.86);
-  const ext = blob.type === 'image/webp' ? 'webp' : blob.type === 'image/png' ? 'png' : 'jpg';
-  return storeFile(brand, blob, ext, opts.folder ?? 'Producten');
+  const ext = blob.type === 'image/png' ? 'png' : 'jpg';
+  return storeFile(brand, blob, ext, opts.folder ?? 'Producten', baseName(file));
 }
 
 const MAX_VIDEO_MB = 200;
@@ -124,8 +124,8 @@ export async function uploadVideo(brand: Brand, file: File, folder = 'Voorpagina
   return storeFile(brand, file, ext, folder);
 }
 
-async function storeFile(brand: Brand, blob: Blob, ext: string, folder: string): Promise<string> {
-  const stamp = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+async function storeFile(brand: Brand, blob: Blob, ext: string, folder: string, name?: string): Promise<string> {
+  const stamp = `${name ? `${name}-` : ''}${Date.now().toString(36)}`;
   try {
     // Preferred: the ownCloud at Internedata, via the server function (login stays on the server).
     return await uploadToCloud(brand, blob, `${stamp}.${ext}`, folder);

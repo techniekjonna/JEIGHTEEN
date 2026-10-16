@@ -1,6 +1,7 @@
 import { useId, useRef, useState, type ReactNode } from 'react';
 import { ImagePlus, Loader2, X } from 'lucide-react';
 import { uploadImage, friendlyError, type Brand } from '../../lib/store';
+import { IMAGE_ACCEPT } from '../../lib/image';
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: (id: string) => ReactNode }) {
   const id = useId();
@@ -161,7 +162,7 @@ export function ImageField({
           </button>
         )}
       </div>
-      <input ref={input} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />
+      <input ref={input} type="file" accept={IMAGE_ACCEPT} hidden onChange={(e) => pick(e.target.files?.[0])} />
       {error && <p className="dform__error">{error}</p>}
     </div>
   );
@@ -234,7 +235,7 @@ export function GalleryField({
         </button>
       </div>
       <p className="dfield__hint">Voor de productpagina. De tweede foto verschijnt ook als je in de shop over het product beweegt.</p>
-      <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => pick(e.target.files)} />
+      <input ref={input} type="file" accept={IMAGE_ACCEPT} multiple hidden onChange={(e) => pick(e.target.files)} />
       {error && <p className="dform__error">{error}</p>}
     </div>
   );

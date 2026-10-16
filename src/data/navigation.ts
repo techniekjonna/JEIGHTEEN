@@ -1,4 +1,4 @@
-import { categories as shopCategories, categoryPath } from './categories';
+import { categoryPath, useCategories } from './categories';
 
 export interface NavItem {
   to: string;
@@ -17,9 +17,10 @@ export type SitePath = '/atelier' | '/music';
 
 /**
  * Category pages per site, listed in that site's menu under "Home".
- * ATELIER: one page per product kind (see data/categories.ts).
+ * ATELIER: the categories managed in the dashboard (see data/categories.ts).
  */
-export const categories: Record<SitePath, readonly NavItem[]> = {
-  '/atelier': shopCategories.map((c) => ({ to: categoryPath(c), label: c.en, nl: c.nl })),
-  '/music': [],
-};
+export function useSiteCategories(site: SitePath): NavItem[] {
+  const shop = useCategories();
+  if (site !== '/atelier') return [];
+  return shop.map((c) => ({ to: categoryPath(c), label: c.en, nl: c.nl }));
+}
