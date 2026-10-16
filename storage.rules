@@ -1,0 +1,21 @@
+rules_version = '2';
+// Reserve storage (photos normally go to ownCloud). Files live in atelier/<map>/ and music/<map>/.
+// Everyone may view them; only that brand's admins may upload or delete.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function canManage(brand) {
+      return request.auth != null
+        && brand in firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.brands;
+    }
+
+    match /{brand}/{path=**} {
+      allow read: if brand in ['atelier', 'music'];
+      allow create, update: if brand in ['atelier', 'music'] && canManage(brand)
+        && (
+          (request.resource.contentType.matches('image/.*') && request.resource.size < 10 * 1024 * 1024)
+          || (request.resource.contentType.matches('video/.*') && request.resource.size < 200 * 1024 * 1024)
+        );
+      allow delete: if brand in ['atelier', 'music'] && canManage(brand);
+    }
+  }
+}

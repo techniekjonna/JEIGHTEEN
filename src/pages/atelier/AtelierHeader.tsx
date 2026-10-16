@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { Logo } from '../../components/Logo';
 import { SiteSwitch } from '../../components/SiteSwitch';
+import { LanguageToggle } from '../../components/LanguageToggle';
+import { useT } from '../../i18n/LanguageContext';
 import { atelierContent } from './content';
 import { useShop } from './ShopContext';
 import { scrollToCollection } from './scroll';
@@ -11,6 +13,7 @@ const ICON = { size: 22, strokeWidth: 1.25 } as const;
 
 /** Desktop: "Search" label that expands into an input. */
 function SearchToggle() {
+  const t = useT();
   const { query, setQuery } = useShop();
   const [open, setOpen] = useState(false);
   const input = useRef<HTMLInputElement>(null);
@@ -23,7 +26,7 @@ function SearchToggle() {
     return (
       <button type="button" className="ahdr__btn ahdr__btn--search" onClick={() => setOpen(true)}>
         <Search {...ICON} />
-        <span>Search</span>
+        <span>{t('Search', 'Zoeken')}</span>
       </button>
     );
   }
@@ -41,8 +44,8 @@ function SearchToggle() {
         ref={input}
         type="search"
         value={query}
-        placeholder={atelierContent.searchPlaceholder}
-        aria-label="Search the atelier"
+        placeholder={t(atelierContent.searchPlaceholder.en, atelierContent.searchPlaceholder.nl)}
+        aria-label={t('Search the atelier', 'Zoek in het atelier')}
         onChange={(e) => setQuery(e.target.value)}
         onBlur={() => !query && setOpen(false)}
         onKeyDown={(e) => {
@@ -56,7 +59,8 @@ function SearchToggle() {
   );
 }
 
-export function AtelierHeader({ onMenu }: { onMenu: () => void }) {
+export function AtelierHeader({ onMenu, onAccount }: { onMenu: () => void; onAccount: () => void }) {
+  const t = useT();
   const { count, setBagOpen, query, setQuery } = useShop();
   const header = useRef<HTMLElement>(null);
   const [solid, setSolid] = useState(false);
@@ -80,12 +84,17 @@ export function AtelierHeader({ onMenu }: { onMenu: () => void }) {
   return (
     <header ref={header} className={`ahdr${solid ? ' is-solid' : ''}`}>
       <div className="ahdr__row">
+        {/* Left: account (opens the sign-in panel from the left), wishlist, contact and search. */}
         <div className="ahdr__side">
-          <button type="button" className="ahdr__btn" onClick={onMenu} aria-label="Open menu">
-            <Menu {...ICON} />
-            <span className="ahdr__label">Menu</span>
+          <button type="button" className="ahdr__btn" onClick={onAccount} aria-label={t('Sign in', 'Inloggen')} title={t('Sign in', 'Inloggen')}>
+            <User {...ICON} />
           </button>
-          <SiteSwitch className="siteswitch--bar" />
+          <button type="button" className="ahdr__btn ahdr__desktop" aria-label={t('Wishlist', 'Verlanglijst')}>
+            <Heart {...ICON} />
+          </button>
+          <button type="button" className="ahdr__btn ahdr__desktop">
+            <span>{t('Contact us', 'Contact')}</span>
+          </button>
           <div className="ahdr__desktop">
             <SearchToggle />
           </div>
@@ -93,24 +102,21 @@ export function AtelierHeader({ onMenu }: { onMenu: () => void }) {
 
         <Link to="/atelier" className="ahdr__brand" aria-label="JEIGHTEEN atelier">
           <Logo />
-          <span className="ahdr__sub">atelier</span>
         </Link>
 
+        {/* Right: the two sites (wide screens), bag, NL/EN and the menu (opens from the right). */}
         <div className="ahdr__side ahdr__side--end">
-          <button type="button" className="ahdr__btn ahdr__desktop">
-            <span>Contact us</span>
-          </button>
-          <button type="button" className="ahdr__btn ahdr__desktop" aria-label="Wishlist">
-            <Heart {...ICON} />
-          </button>
-          <button type="button" className="ahdr__btn" aria-label="Account">
-            <User {...ICON} />
-          </button>
-          <button type="button" className="ahdr__btn ahdr__bag" onClick={() => setBagOpen(true)} aria-label={`Bag, ${count} items`}>
+          <SiteSwitch className="siteswitch--bar" />
+          <button type="button" className="ahdr__btn ahdr__bag" onClick={() => setBagOpen(true)} aria-label={t(`Bag, ${count} items`, `Tas, ${count} items`)}>
             <ShoppingBag {...ICON} />
             <span className="ahdr__badge" aria-hidden="true">
               {count}
             </span>
+          </button>
+          <LanguageToggle className="ahdr__btn" />
+          <button type="button" className="ahdr__btn" onClick={onMenu} aria-label={t('Open menu', 'Menu openen')}>
+            <span className="ahdr__label">Menu</span>
+            <Menu {...ICON} />
           </button>
         </div>
       </div>
@@ -127,8 +133,8 @@ export function AtelierHeader({ onMenu }: { onMenu: () => void }) {
           <input
             type="search"
             value={query}
-            placeholder={atelierContent.searchPlaceholder}
-            aria-label="Search the atelier"
+            placeholder={t(atelierContent.searchPlaceholder.en, atelierContent.searchPlaceholder.nl)}
+            aria-label={t('Search the atelier', 'Zoek in het atelier')}
             onChange={(e) => setQuery(e.target.value)}
           />
         </form>

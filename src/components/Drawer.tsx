@@ -11,10 +11,12 @@ interface DrawerProps {
   heading?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
+  /** Accessible name of the close button. Default: "Close <label>". */
+  closeLabel?: string;
 }
 
-/** Slide-in panel used for the menu (left) and the bag (right). Closed state is `visibility:hidden`, so it is out of the tab order. */
-export function Drawer({ open, onClose, side = 'left', label, heading, children, footer }: DrawerProps) {
+/** Slide-in panel: sign-in (left), menu and bag (right). Closed state is `visibility:hidden`, so it is out of the tab order. */
+export function Drawer({ open, onClose, side = 'left', label, heading, children, footer, closeLabel }: DrawerProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const onCloseRef = useRef(onClose);
   useEffect(() => {
@@ -44,7 +46,7 @@ export function Drawer({ open, onClose, side = 'left', label, heading, children,
       <div className="drawer__panel" role="dialog" aria-modal="true" aria-label={label}>
         <div className="drawer__head">
           {heading ?? <span className="drawer__title">{label}</span>}
-          <button ref={closeButton} type="button" className="icon-btn" onClick={onClose} aria-label={`Close ${label.toLowerCase()}`}>
+          <button ref={closeButton} type="button" className="icon-btn" onClick={onClose} aria-label={closeLabel ?? `Close ${label.toLowerCase()}`}>
             <X size={22} strokeWidth={1.25} />
           </button>
         </div>

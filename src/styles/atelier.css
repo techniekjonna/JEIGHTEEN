@@ -24,6 +24,27 @@
   background: var(--bg);
   border-bottom-color: var(--line);
 }
+/* Hovering the header (or tabbing through it) over the film: it takes the site background, like the reference. */
+@media (hover: hover) {
+  .ahdr:hover {
+    --ink: var(--fg);
+    mix-blend-mode: normal;
+    background: var(--bg);
+    border-bottom-color: var(--line);
+  }
+  .ahdr:hover .ahdr__badge {
+    color: var(--bg);
+  }
+}
+.ahdr:has(:focus-visible) {
+  --ink: var(--fg);
+  mix-blend-mode: normal;
+  background: var(--bg);
+  border-bottom-color: var(--line);
+}
+.ahdr:has(:focus-visible) .ahdr__badge {
+  color: var(--bg);
+}
 
 .ahdr__row {
   display: grid;
@@ -38,16 +59,18 @@
   --gap: clamp(14px, 1.8vw, 30px);
   gap: var(--gap);
 }
-/* While the search field is open it needs the room, so the site switch steps aside. */
-.ahdr__side:has(.ahdr__search) .siteswitch--bar {
+/* On the right the site switch gets its divider after it (towards the bag), not before. */
+.ahdr__side--end .siteswitch--bar::before {
   display: none;
 }
-@media (min-width: 1280px) {
-  .siteswitch--bar + .ahdr__desktop {
-    margin-left: 14px;
-  }
+.ahdr__side--end .siteswitch--bar::after {
+  content: '';
+  width: 1px;
+  height: 14px;
+  background: currentColor;
+  opacity: 0.45;
 }
-/* 1280–1439px: with the switch next to Menu there is only room for the search icon. */
+/* 1280–1439px: with the switch on the right there is only room for the search icon on the left. */
 @media (min-width: 1280px) and (max-width: 1439px) {
   .ahdr__side .ahdr__btn--search span {
     display: none;
@@ -66,6 +89,9 @@
   font-weight: 300;
   letter-spacing: 0.04em;
   white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+  min-height: 44px;
 }
 
 .ahdr__brand {
@@ -148,7 +174,9 @@
   position: absolute;
   inset: 0;
 }
-.hero video {
+.hero video,
+.band video,
+.hero__media img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -324,19 +352,6 @@
   white-space: nowrap;
 }
 
-.afoot {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 28px clamp(16px, 4.6vw, 92px) 36px;
-  border-top: 1px solid var(--line);
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-}
-
 /* ───────────── Phone ─────────────
    Like the app version: icon-only left/right, search pill under the logo row,
    and the selection slides up over the film as a rounded sheet. */
@@ -388,5 +403,269 @@
   .explore {
     margin-top: -28px;
     border-radius: 28px 28px 0 0;
+  }
+}
+
+.tile__soldout {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ───────────── Headings: bold condensed, like the logo ─────────────
+   Upright and heavy (Helvetica Neue Bold Condensed where installed, Archivo Narrow elsewhere).
+   Only headings and key text; body copy stays Jost. */
+.hero__title,
+.explore__title,
+.band__title,
+.services__title,
+.service__title,
+.afoot__head,
+.tile__name,
+.tile__price,
+.hero__cta,
+.band__cta,
+.hero__label,
+.band__label {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: condensed;
+}
+.hero__title,
+.explore__title,
+.band__title,
+.services__title {
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+.hero__title {
+  font-size: clamp(40px, 5.4vw, 88px);
+}
+.explore__title {
+  max-width: 18em;
+  font-size: clamp(30px, 3.6vw, 56px);
+}
+.hero__label,
+.band__label {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero__cta,
+.band__cta {
+  font-size: clamp(15px, 1.15vw, 18px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tile__name {
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+.tile__price {
+  font-size: 15px;
+}
+
+/* ───────────── Media blocks: Second, Third, Closing ───────────── */
+.band {
+  position: relative;
+  background: var(--bg);
+  color: var(--fg);
+}
+.band--full,
+.band--closing {
+  background: #0a0a0b;
+  color: #fff;
+}
+.band__visual {
+  position: relative;
+  overflow: hidden;
+  background: #0a0a0b;
+}
+.band--full .band__visual {
+  height: clamp(520px, 92svh, 1040px);
+}
+.band--closing .band__visual {
+  height: clamp(440px, 74svh, 860px);
+}
+.band--closing .band__scrim {
+  background: rgba(0, 0, 0, 0.3);
+}
+.band[data-paused='true'] .hero__placeholder {
+  animation-play-state: paused;
+}
+
+.band__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.band--full .band__caption,
+.band--closing .band__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0 24px;
+}
+.band--full .band__caption {
+  bottom: clamp(64px, 10vh, 112px);
+}
+.band--closing .band__caption {
+  top: 0;
+  bottom: 0;
+  justify-content: center;
+}
+.band__title {
+  max-width: 14em;
+  font-size: clamp(34px, 4.4vw, 72px);
+}
+.band__text {
+  max-width: 32em;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+.band__cta {
+  margin-top: 4px;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 3px;
+  line-height: 1.2;
+  transition: opacity 0.25s ease;
+}
+.band__cta:hover {
+  opacity: 0.65;
+}
+
+.band--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+.band--split .band__visual {
+  aspect-ratio: 4 / 5;
+  max-height: 100svh;
+  width: 100%;
+}
+.band--split .band__caption {
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(48px, 7vw, 120px);
+}
+
+/* ───────────── Services ───────────── */
+.services {
+  padding: clamp(72px, 9vw, 140px) clamp(16px, 4.6vw, 92px);
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  text-align: center;
+}
+.services__title {
+  margin: 0 auto clamp(40px, 5vw, 72px);
+  font-size: clamp(28px, 3.2vw, 48px);
+}
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(32px, 4vw, 64px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.service {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.service__title {
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.service__text {
+  max-width: 24em;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ───────────── Footer ───────────── */
+.afoot {
+  padding: clamp(56px, 7vw, 96px) var(--pad-x) 32px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+}
+.afoot__cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+.afoot__col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 300;
+}
+.afoot__col a,
+.afoot__col button,
+.afoot__col p {
+  color: var(--muted);
+  text-align: left;
+  min-height: 28px;
+  transition: color 0.25s ease;
+}
+.afoot__col p {
+  max-width: 26em;
+  line-height: 1.6;
+}
+.afoot__col a:hover,
+.afoot__col button:hover {
+  color: var(--fg);
+}
+.afoot__head {
+  margin-bottom: 6px;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.afoot__brand {
+  --logo-w: 100%;
+  margin-top: clamp(56px, 8vw, 120px);
+}
+.afoot__legal {
+  margin-top: 24px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+@media (max-width: 767px) {
+  .band--full .band__visual {
+    height: 80svh;
+  }
+  .band--closing .band__visual {
+    height: 70svh;
+  }
+  .band--split {
+    grid-template-columns: 1fr;
+  }
+  .band--split .band__caption {
+    padding: 40px 20px 64px;
+  }
+  .services__grid,
+  .afoot__cols {
+    grid-template-columns: 1fr;
+  }
+  .afoot__cols {
+    gap: 32px;
   }
 }

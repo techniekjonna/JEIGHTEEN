@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'J18 Condensed';
+  src: local('HelveticaNeue-CondensedBold'), local('Helvetica Neue Condensed Bold'), local('HelveticaNeueLTStd-BdCn'),
+    local('Helvetica Neue LT Std Bold Condensed'), local('HelveticaNeue-BoldCond');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Tokens — day is the default, night is toggled via <html data-theme="night"> */
 :root,
 :root[data-theme='day'] {
@@ -28,6 +37,9 @@
   /* Headings and titles use the logo's typeface. Helvetica Neue is not bundled (commercial licence):
      Apple devices render the real thing, everything else falls back to Helvetica / Arial. */
   --font-display: 'Helvetica Neue', 'HelveticaNeue', Helvetica, 'Nimbus Sans', Arial, sans-serif;
+  /* Bold condensed headings, close to the logo lettering: the real Helvetica Neue Bold Condensed where the
+     device has it (Apple), Archivo Narrow (Google Fonts, see index.html) everywhere else. */
+  --font-head: 'J18 Condensed', 'Archivo Narrow', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -191,4 +203,20 @@ body {
 .theme-switch button[aria-pressed='true'] {
   background: var(--fg);
   color: var(--bg);
+}
+
+/* NL / EN switch (header and top bar). */
+.lang-toggle {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  min-height: 44px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: inherit;
+  transition: opacity 0.25s ease;
+}
+.lang-toggle:hover {
+  opacity: 0.6;
 }

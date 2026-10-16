@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import { products } from '../../data/products';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import type { Product } from '../../data/products';
+import { listen } from '../../lib/store';
 
 interface CartLine {
   id: string;
@@ -7,6 +8,9 @@ interface CartLine {
 }
 
 interface ShopContextValue {
+  /** Published atelier items, newest first (from the dashboard). */
+  products: Product[];
+  loaded: boolean;
   lines: CartLine[];
   count: number;
   total: number;
@@ -24,12 +28,23 @@ interface ShopContextValue {
 
 const ShopContext = createContext<ShopContextValue | null>(null);
 
-/** In-memory demo state: bag, wishlist and search. Nothing is persisted or sent anywhere. */
+/** Catalogue (live from the atelier dashboard) plus bag, wishlist and search (in memory). */
 export function ShopProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [bagOpen, setBagOpen] = useState(false);
   const [wishlist, setWishlist] = useState<ReadonlySet<string>>(new Set());
   const [query, setQuery] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(
+    () =>
+      listen<Product>('atelier_items', true, (items) => {
+        setProducts(items);
+        setLoaded(true);
+      }, () => setLoaded(true)),
+    []
+  );
 
   const add = useCallback((id: string) => {
     setLines((prev) =>
@@ -57,6 +72,8 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ShopContextValue>(() => {
     const price = new Map(products.map((p) => [p.id, p.price]));
     return {
+      products,
+      loaded,
       lines,
       count: lines.reduce((n, l) => n + l.qty, 0),
       total: lines.reduce((sum, l) => sum + (price.get(l.id) ?? 0) * l.qty, 0),
@@ -70,7 +87,7 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       query,
       setQuery,
     };
-  }, [lines, bagOpen, wishlist, query, add, decrement, remove, toggleWish]);
+  }, [products, loaded, lines, bagOpen, wishlist, query, add, decrement, remove, toggleWish]);
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 }

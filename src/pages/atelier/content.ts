@@ -1,12 +1,6 @@
-// Copy and media for the atelier landing. Edit here, not in the components.
+// Fixed copy for the atelier page, in English and Dutch. The film/photo at the top, its texts and
+// its link are set in the ATELIER dashboard (see src/lib/heroSettings.ts).
 export const atelierContent = {
-  hero: {
-    // Drop the film at public/media/atelier-hero.mp4. Until it exists a dark placeholder is shown.
-    video: '/media/atelier-hero.mp4',
-    label: 'NEW',
-    title: 'Atelier Collection',
-    cta: 'Discover the Collection',
-  },
-  exploreTitle: "Explore a Selection of the Atelier's Creations",
-  searchPlaceholder: 'Search the Atelier',
+  exploreTitle: { en: "Explore a Selection of the Atelier's Creations", nl: 'Ontdek een selectie uit het atelier' },
+  searchPlaceholder: { en: 'Search the Atelier', nl: 'Zoek in het atelier' },
 };

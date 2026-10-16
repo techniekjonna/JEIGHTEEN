@@ -7,6 +7,7 @@
   z-index: 20;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   --gap: 22px;
   gap: var(--gap);
   padding: 18px clamp(16px, 3vw, 40px);
@@ -88,4 +89,16 @@
     font-size: 11px;
     letter-spacing: 0.2em;
   }
+}
+
+/* Site switch on the right: divider after it, towards NL/EN and Menu. */
+.sitebar .siteswitch--bar::before {
+  display: none;
+}
+.sitebar .siteswitch--bar::after {
+  content: '';
+  width: 1px;
+  height: 14px;
+  background: currentColor;
+  opacity: 0.45;
 }

@@ -15,6 +15,8 @@ npm run build    # dist/
 | `/`        | Wit (of zwart) landingsscherm met logo, MUSIC en ATELIER   |
 | `/atelier` | Demo-webshop (transparante header over film, selectie, tas) |
 | `/music`   | Placeholder ("Coming soon")                                |
+| `/atelier/dashboard` | Beheer van kunst en merchandise (alleen atelier-beheerders) |
+| `/music/dashboard`   | Beheer van releases (alleen music-beheerders)              |
 
 Dag/nacht staat in het menu (linksboven) en wordt onthouden in `localStorage`.
 
@@ -41,7 +43,13 @@ Teksten en het pad staan in `src/pages/atelier/content.ts`, producten in `src/da
 `public/jeighteen-logo.png` (woordmerk) en `public/jeighteen-mark.png` (monogram, bovenin het menu) zijn zwart op transparant.
 In de UI worden ze als CSS-mask gebruikt (`Logo.tsx`, `Mark.tsx`), zodat ze de tekstkleur volgen (zwart/wit, en omgekeerd over de film).
 
-## Let op
+## Dashboards en Firebase
 
-`src/pages/{Login,Register,Dashboard,Projecten,Instellingen}Page.tsx`, `src/contexts/AuthContext.tsx`,
-`src/lib/firebase.ts` en `src/components/{ui,layout}` komen uit de oude JonnaBasis-starter en worden niet meer gebruikt.
+ATELIER en MUSIC hebben elk een eigen dashboard, eigen collectie (`atelier_items`, `music_releases`), eigen fotomap in Storage (`atelier/`, `music/`) en eigen beheerdersrecht.
+Wie wat mag staat in Firestore: `admins/{uid}` met `brands: ['atelier']`, `['music']` of beide. Zie `firestore.rules` en `storage.rules`.
+
+Zonder Firebase-config draait alles in proefmodus (localStorage, alleen in die browser).
+Koppelen: vul `src/lib/firebase.config.ts` of zet `VITE_FIREBASE_*` in Vercel. Daarna in Firebase: Authentication (e-mail/wachtwoord) aan,
+Firestore en Storage aanmaken (Storage vraagt het Blaze-abonnement), regels plaatsen, beheerder aanmaken en een `admins/{uid}`-document toevoegen.
+
+`vercel.json` stuurt alle routes naar de app, zodat `/atelier/dashboard` ook na verversen werkt.

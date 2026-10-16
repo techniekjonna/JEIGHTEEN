@@ -4,6 +4,7 @@ import { Drawer } from './Drawer';
 import { Mark } from './Mark';
 import { SiteSwitch } from './SiteSwitch';
 import { ThemeSwitch } from './ThemeSwitch';
+import { useT } from '../i18n/LanguageContext';
 
 interface MenuDrawerProps {
   open: boolean;
@@ -14,10 +15,13 @@ interface MenuDrawerProps {
    * the menu is the plain hub: Home plus both sites.
    */
   site?: SitePath;
+  /** The menu opens from the right, like on the Jonna Rincon site. */
+  side?: 'left' | 'right';
 }
 
 /** The site-wide menu. The monogram in the header links home. */
-export function MenuDrawer({ open, onClose, site }: MenuDrawerProps) {
+export function MenuDrawer({ open, onClose, site, side = 'right' }: MenuDrawerProps) {
+  const t = useT();
   const heading = (
     <Link to="/" className="drawer__mark" onClick={onClose} aria-label="JEIGHTEEN, home">
       <Mark />
@@ -25,12 +29,12 @@ export function MenuDrawer({ open, onClose, site }: MenuDrawerProps) {
   );
 
   return (
-    <Drawer open={open} onClose={onClose} side="left" label="Menu" heading={heading} footer={<ThemeSwitch />}>
+    <Drawer open={open} onClose={onClose} side={side} label="Menu" closeLabel={t('Close menu', 'Menu sluiten')} heading={heading} footer={<ThemeSwitch />}>
       {site ? (
         <>
           {/* The banner shows these on wide screens; on narrow screens they sit here instead. */}
           <SiteSwitch className="siteswitch--drawer" onNavigate={onClose} />
-          <nav className="menu-nav" aria-label="Main">
+          <nav className="menu-nav" aria-label={t('Main', 'Hoofdmenu')}>
             <NavLink to="/" end onClick={onClose}>
               Home
             </NavLink>
@@ -42,7 +46,7 @@ export function MenuDrawer({ open, onClose, site }: MenuDrawerProps) {
           </nav>
         </>
       ) : (
-        <nav className="menu-nav" aria-label="Main">
+        <nav className="menu-nav" aria-label={t('Main', 'Hoofdmenu')}>
           <NavLink to="/" end onClick={onClose}>
             Home
           </NavLink>

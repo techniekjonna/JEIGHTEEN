@@ -1,24 +1,33 @@
-export interface Product {
-  id: string;
+import type { Entry } from '../lib/store';
+
+/** Kinds for the atelier. Shown under the name in the shop. */
+export const productKinds = ['Artwork', 'Print', 'Poster', 'Apparel', 'Merch', 'Object'] as const;
+
+export interface Product extends Entry {
   name: string;
   kind: string;
-  /** Whole euros. */
+  /** Euros, cents allowed. */
   price: number;
-  /** Optional photo. Without it the tile shows a neutral placeholder. */
+  description?: string;
   image?: string;
+  /** Pieces left. Empty = no limit, 0 = sold out. */
+  stock?: number;
 }
 
-// PLACEHOLDER CATALOGUE — swap for real work. Drop photos in public/products/ and set `image: '/products/xxx.jpg'`.
-export const products: Product[] = [
-  { id: 'a01', name: 'Untitled 01', kind: 'Print', price: 85 },
-  { id: 'a02', name: 'Untitled 02', kind: 'Print', price: 85 },
-  { id: 'a03', name: 'Untitled 03', kind: 'Poster', price: 45 },
-  { id: 'a04', name: 'Untitled 04', kind: 'Edition', price: 320 },
-  { id: 'a05', name: 'Untitled 05', kind: 'Object', price: 180 },
-  { id: 'a06', name: 'Untitled 06', kind: 'Print', price: 120 },
-  { id: 'a07', name: 'Untitled 07', kind: 'Poster', price: 45 },
-  { id: 'a08', name: 'Untitled 08', kind: 'Edition', price: 260 },
-];
+// Demo catalogue, only used while Firebase is not connected (and only until something is edited in the dashboard).
+export const demoProducts: Product[] = [
+  { name: 'Untitled 01', kind: 'Print', price: 85 },
+  { name: 'Untitled 02', kind: 'Print', price: 85 },
+  { name: 'Untitled 03', kind: 'Poster', price: 45 },
+  { name: 'Untitled 04', kind: 'Artwork', price: 320 },
+  { name: 'Untitled 05', kind: 'Object', price: 180 },
+  { name: 'Untitled 06', kind: 'Apparel', price: 65 },
+  { name: 'Untitled 07', kind: 'Merch', price: 25 },
+  { name: 'Untitled 08', kind: 'Artwork', price: 260 },
+].map((p, i) => ({ ...p, id: `demo-${i + 1}`, published: true, createdAt: 100 - i }));
 
-const euro = new Intl.NumberFormat('en-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-export const formatPrice = (amount: number) => euro.format(amount);
+const whole = new Intl.NumberFormat('en-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const cents = new Intl.NumberFormat('en-NL', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 });
+export const formatPrice = (amount: number) => (Number.isInteger(amount) ? whole : cents).format(amount);
+
+export const isSoldOut = (p: Product) => p.stock === 0;

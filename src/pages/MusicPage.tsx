@@ -2,9 +2,11 @@ import { useCallback, useState } from 'react';
 import { Logo } from '../components/Logo';
 import { MenuDrawer } from '../components/MenuDrawer';
 import { SiteBar } from '../components/SiteBar';
+import { useT } from '../i18n/LanguageContext';
 
 /** Placeholder until the music side gets its own design. */
 export function MusicPage() {
+  const t = useT();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
@@ -17,7 +19,7 @@ export function MusicPage() {
         </h1>
         <p className="stage__note">
           <span>JEIGHTEEN MUSIC</span>
-          <span className="stage__soon">Coming soon</span>
+          <span className="stage__soon">{t('Coming soon', 'Binnenkort')}</span>
         </p>
       </main>
       <MenuDrawer open={menuOpen} onClose={closeMenu} site="/music" />

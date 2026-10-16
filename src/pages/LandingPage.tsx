@@ -15,7 +15,7 @@ export function LandingPage() {
         <h1 className="stage__logo">
           <Logo />
         </h1>
-        <nav className="stage__links" aria-label="Sections">
+        <nav className="stage__links" aria-label="JEIGHTEEN">
           <Link to="/music" className="link-line">
             JEIGHTEEN MUSIC
           </Link>

@@ -1,0 +1,33 @@
+rules_version = '2';
+// JEIGHTEEN: ATELIER and MUSIC are managed separately.
+// admins/{uid} = { brands: ['atelier'] } or ['music'] or both. Create these docs by hand in the Firebase console.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function canManage(brand) {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && brand in get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.brands;
+    }
+
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /atelier_items/{id} {
+      allow read: if resource.data.published == true || canManage('atelier');
+      allow write: if canManage('atelier');
+    }
+
+    // Settings of the ATELIER page (the film or photo at the top, its texts and link). Public, only atelier admins edit.
+    match /atelier_settings/{id} {
+      allow read: if true;
+      allow write: if canManage('atelier');
+    }
+
+    match /music_releases/{id} {
+      allow read: if resource.data.published == true || canManage('music');
+      allow write: if canManage('music');
+    }
+  }
+}

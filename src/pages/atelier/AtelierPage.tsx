@@ -1,34 +1,40 @@
 import { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { MenuDrawer } from '../../components/MenuDrawer';
 import { AtelierHeader } from './AtelierHeader';
 import { BagDrawer } from './BagDrawer';
-import { Hero } from './Hero';
+import { Banner, Hero } from './Hero';
+import { Services } from './Services';
+import { AtelierFooter } from './AtelierFooter';
 import { ProductGrid } from './ProductGrid';
 import { atelierContent } from './content';
+import { AccountDrawer } from './AccountDrawer';
+import { useT } from '../../i18n/LanguageContext';
 
-/** Demo webshop for JEIGHTEEN ATELIER. Layout follows the reference: transparent header over a full-bleed film, then the selection. */
+/** Demo webshop for JEIGHTEEN ATELIER. Layout follows the reference: transparent header over a full-bleed film, then the selection, a wide image, a split image with text, services, a closing image and the footer. */
 export function AtelierPage() {
+  const t = useT();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const closeAccount = useCallback(() => setAccountOpen(false), []);
 
   return (
     <div className="atelier">
-      <AtelierHeader onMenu={() => setMenuOpen(true)} />
+      <AtelierHeader onMenu={() => setMenuOpen(true)} onAccount={() => setAccountOpen(true)} />
       <main>
         <Hero />
         <section className="explore" id="collection">
-          <h2 className="explore__title">{atelierContent.exploreTitle}</h2>
+          <h2 className="explore__title">{t(atelierContent.exploreTitle.en, atelierContent.exploreTitle.nl)}</h2>
           <ProductGrid />
         </section>
+        <Banner slot="second" layout="full" />
+        <Banner slot="third" layout="split" />
+        <Services />
+        <Banner slot="closing" layout="closing" />
       </main>
-      <footer className="afoot">
-        <span>© JEIGHTEEN ATELIER</span>
-        <Link to="/" className="link-line">
-          JEIGHTEEN
-        </Link>
-      </footer>
+      <AtelierFooter />
       <MenuDrawer open={menuOpen} onClose={closeMenu} site="/atelier" />
+      <AccountDrawer open={accountOpen} onClose={closeAccount} />
       <BagDrawer />
     </div>
   );
