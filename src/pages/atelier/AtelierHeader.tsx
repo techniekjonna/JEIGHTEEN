@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { Logo } from '../../components/Logo';
 import { SiteSwitch } from '../../components/SiteSwitch';
@@ -7,7 +7,6 @@ import { LanguageToggle } from '../../components/LanguageToggle';
 import { useT } from '../../i18n/LanguageContext';
 import { atelierContent } from './content';
 import { useShop } from './ShopContext';
-import { scrollToCollection } from './scroll';
 
 const ICON = { size: 22, strokeWidth: 1.25 } as const;
 
@@ -15,6 +14,7 @@ const ICON = { size: 22, strokeWidth: 1.25 } as const;
 function SearchToggle() {
   const t = useT();
   const { query, setQuery } = useShop();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const input = useRef<HTMLInputElement>(null);
 
@@ -36,7 +36,7 @@ function SearchToggle() {
       role="search"
       onSubmit={(e) => {
         e.preventDefault();
-        scrollToCollection();
+        navigate('/atelier/all');
       }}
     >
       <Search {...ICON} />
@@ -62,6 +62,7 @@ function SearchToggle() {
 export function AtelierHeader({ onMenu, onAccount }: { onMenu: () => void; onAccount: () => void }) {
   const t = useT();
   const { count, setBagOpen, query, setQuery } = useShop();
+  const navigate = useNavigate();
   const header = useRef<HTMLElement>(null);
   const [solid, setSolid] = useState(false);
 
@@ -127,7 +128,7 @@ export function AtelierHeader({ onMenu, onAccount }: { onMenu: () => void; onAcc
           role="search"
           onSubmit={(e) => {
             e.preventDefault();
-            scrollToCollection();
+            navigate('/atelier/all');
           }}
         >
           <input

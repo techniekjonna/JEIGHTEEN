@@ -514,3 +514,50 @@ textarea.dinput {
 .dtabs__hint {
   margin-bottom: 24px;
 }
+
+/* Extra product photos */
+.dgallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.dgallery__item,
+.dgallery__add {
+  position: relative;
+  width: 96px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--tile-a), var(--tile-b));
+}
+.dgallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dgallery__tools {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+}
+.dgallery__tools button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+}
+.dgallery__tools button:disabled {
+  opacity: 0.3;
+}
+.dgallery__add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  text-align: center;
+  border: 1px dashed var(--line);
+}

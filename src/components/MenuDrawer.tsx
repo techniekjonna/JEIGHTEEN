@@ -40,7 +40,7 @@ export function MenuDrawer({ open, onClose, site, side = 'right' }: MenuDrawerPr
             </NavLink>
             {categories[site].map((item) => (
               <NavLink key={item.to} to={item.to} onClick={onClose}>
-                {item.label}
+                {t(item.label, item.nl ?? item.label)}
               </NavLink>
             ))}
           </nav>

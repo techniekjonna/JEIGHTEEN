@@ -6,7 +6,7 @@ import { TextField } from './fields';
 /**
  * E-mail + password sign-in, with a switch to create a new account.
  * Used in the sign-in panel on the site and on the dashboard itself.
- * A new account has no rights until it is added to admins/{uid} in Firestore.
+ * A new account gets users/{uid} with role 'user'; set role to 'admin' in Firestore for the dashboard.
  */
 export function SignInForm({ title, sub }: { title?: string; sub?: string }) {
   const t = useT();

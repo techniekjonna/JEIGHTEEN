@@ -2,12 +2,13 @@ import { formatPrice, productKinds, type Product } from '../../data/products';
 import { CollectionManager, type FormProps } from './CollectionManager';
 import { DashboardShell } from './DashboardShell';
 import { HeroSettings } from './HeroSettings';
-import { ImageField, NumberField, SelectField, TextField, Toggle } from './fields';
+import { GalleryField, ImageField, NumberField, SelectField, TextField, Toggle } from './fields';
 
 function ProductForm({ brand, value, set, setUploading }: FormProps<Product>) {
   return (
     <>
       <ImageField brand={brand} label="Foto" value={value.image} onChange={(image) => set({ image })} onBusy={setUploading} />
+      <GalleryField brand={brand} label="Extra foto's" value={value.images} onChange={(images) => set({ images })} onBusy={setUploading} />
       <TextField label="Naam" value={value.name} onChange={(name) => set({ name })} placeholder="Bijv. Eighteen Tee, black" />
       <SelectField label="Soort" value={value.kind} options={productKinds} onChange={(kind) => set({ kind })} />
       <div className="dform__row">

@@ -115,8 +115,11 @@ export async function shareLink(cfg, filePath) {
   return url.replace(/\/+$/, '') + '/download';
 }
 
-// Only signed-in admins with the right brand (Firestore admins/{uid}.brands) may upload.
-// The ID token is checked by Google, the admin doc is read with that same token.
+// TESTFASE: true = every signed-in account may upload (open for development). Set to false before launch.
+const TESTFASE = true;
+
+// Only signed-in admins (Firestore users/{uid}.role == 'admin') may upload.
+// The ID token is checked by Google, the user doc is read with that same token.
 export async function verifyAdmin(idToken, brand, env = process.env) {
   const apiKey = env.VITE_FIREBASE_API_KEY || env.FIREBASE_API_KEY || '';
   if (!idToken || !apiKey) return false;
@@ -128,11 +131,12 @@ export async function verifyAdmin(idToken, brand, env = process.env) {
   if (!look.ok) return false;
   const uid = (await look.json())?.users?.[0]?.localId;
   if (!uid) return false;
+  if (TESTFASE) return true;
   const doc = await fetch(
-    `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/admins/${uid}`,
+    `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents/users/${uid}`,
     { headers: { Authorization: `Bearer ${idToken}` } }
   );
   if (!doc.ok) return false;
-  const brands = (await doc.json())?.fields?.brands?.arrayValue?.values ?? [];
-  return brands.some((v) => v?.stringValue === brand);
+  void brand; // both brands are managed by the admins for now
+  return (await doc.json())?.fields?.role?.stringValue === 'admin';
 }

@@ -1,6 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Product } from '../../data/products';
+import { onAuthStateChanged } from 'firebase/auth';
 import { listen } from '../../lib/store';
+import { firebase, firebaseReady } from '../../lib/firebase';
+import { saveUserProfile, useUserProfile } from '../../lib/userProfile';
 
 interface CartLine {
   id: string;
@@ -36,6 +39,25 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const [query, setQuery] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [uid, setUid] = useState<string | null>(null);
+  const profile = useUserProfile(uid);
+
+  // Signed in: the wishlist lives in the account (users/{uid}.wishlist), so it is kept on every device.
+  useEffect(() => {
+    if (!firebaseReady) return;
+    return onAuthStateChanged(firebase().auth, (user) => setUid(user?.uid ?? null));
+  }, []);
+  const profileWishes = profile?.wishlist.join('|');
+  useEffect(() => {
+    if (profileWishes === undefined) return;
+    const saved = profileWishes ? profileWishes.split('|') : [];
+    setWishlist((prev) => {
+      // Hearts set before signing in are added to the account once.
+      const merged = new Set([...saved, ...prev]);
+      if (uid && merged.size > saved.length) void saveUserProfile(uid, { wishlist: [...merged] }).catch(() => undefined);
+      return merged;
+    });
+  }, [profileWishes, uid]);
 
   useEffect(
     () =>
@@ -61,13 +83,22 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     setLines((prev) => prev.filter((l) => l.id !== id));
   }, []);
 
-  const toggleWish = useCallback((id: string) => {
-    setWishlist((prev) => {
-      const next = new Set(prev);
-      if (!next.delete(id)) next.add(id);
-      return next;
-    });
-  }, []);
+  const toggleWish = useCallback(
+    (id: string) => {
+      setWishlist((prev) => {
+        const next = new Set(prev);
+        if (!next.delete(id)) next.add(id);
+        if (uid) void saveUserProfile(uid, { wishlist: [...next] }).catch(() => undefined);
+        return next;
+      });
+    },
+    [uid]
+  );
+
+  // Clear the hearts when signing out.
+  useEffect(() => {
+    if (firebaseReady && uid === null) setWishlist(new Set());
+  }, [uid]);
 
   const value = useMemo<ShopContextValue>(() => {
     const price = new Map(products.map((p) => [p.id, p.price]));

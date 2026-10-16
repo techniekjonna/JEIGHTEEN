@@ -9,12 +9,14 @@ import {
 import { doc, getDoc } from 'firebase/firestore';
 import { firebase, firebaseReady } from '../../lib/firebase';
 import type { Brand } from '../../lib/store';
+import { ensureUserProfile } from '../../lib/userProfile';
+import { TESTFASE } from '../../lib/testfase';
 
 export type AdminStatus = 'loading' | 'signed-out' | 'denied' | 'ok';
 
 /**
- * Who may manage which brand lives in Firestore: admins/{uid} = { brands: ['atelier', 'music'] }.
- * An account with only 'atelier' cannot open the music dashboard, and the other way round.
+ * Like the JonnaRincon site: every account has users/{uid} with a field role.
+ * role 'admin' opens the dashboard; everyone else is 'user'. Change the role in the Firebase console.
  */
 export function useAdmin(brand: Brand) {
   const [state, setState] = useState<{ status: AdminStatus; email: string | null; uid: string | null }>(() => ({
@@ -30,11 +32,12 @@ export function useAdmin(brand: Brand) {
     const stop = onAuthStateChanged(auth, async (user) => {
       if (!user) return setState({ status: 'signed-out', email: null, uid: null });
       setState({ status: 'loading', email: user.email, uid: user.uid });
+      await ensureUserProfile(user);
       try {
-        const brands = (await getDoc(doc(db, 'admins', user.uid))).data()?.brands;
-        if (active) setState({ status: Array.isArray(brands) && brands.includes(brand) ? 'ok' : 'denied', email: user.email, uid: user.uid });
+        const role = (await getDoc(doc(db, 'users', user.uid))).data()?.role;
+        if (active) setState({ status: TESTFASE || role === 'admin' ? 'ok' : 'denied', email: user.email, uid: user.uid });
       } catch {
-        if (active) setState({ status: 'denied', email: user.email, uid: user.uid });
+        if (active) setState({ status: TESTFASE ? 'ok' : 'denied', email: user.email, uid: user.uid });
       }
     });
     return () => {
@@ -63,7 +66,7 @@ export async function adminSignIn(email: string, password: string) {
   }
 }
 
-/** New account (e-mail + password). It has no rights until admins/{uid} is made in Firestore. */
+/** New account (e-mail + password). Its users/{uid} profile (role 'user') is made automatically. */
 export async function adminSignUp(email: string, password: string) {
   try {
     await createUserWithEmailAndPassword(firebase().auth, email.trim(), password);

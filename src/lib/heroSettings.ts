@@ -11,8 +11,8 @@ export type BannerSlot = 'hero' | 'second' | 'third' | 'closing';
 
 export const bannerSlots: { slot: BannerSlot; name: string; hint: string }[] = [
   { slot: 'hero', name: 'Main', hint: 'Het grote beeld bovenaan de pagina.' },
-  { slot: 'second', name: 'Second', hint: 'Breed beeld onder je collectie.' },
-  { slot: 'third', name: 'Third', hint: 'Half beeld met tekst ernaast.' },
+  { slot: 'second', name: 'Second', hint: 'Breed beeld onder de categorieën.' },
+  { slot: 'third', name: 'Third', hint: 'Breed beeld (film met pauze- en geluidsknop) tussen de twee productrijen.' },
   { slot: 'closing', name: 'Closing', hint: 'Het laatste beeld, net boven de onderkant.' },
 ];
 
@@ -31,6 +31,10 @@ export interface HeroSettings {
   ctaNl: string;
   /** Optional. Empty = the button scrolls down to the collection. */
   link?: string;
+  /** Main only: an optional second link next to the first, like the reference's two "Discover" links. */
+  cta2En?: string;
+  cta2Nl?: string;
+  link2?: string;
   /** false = this block is hidden on the site. */
   visible?: boolean;
   updatedAt?: number;

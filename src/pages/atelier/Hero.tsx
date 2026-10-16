@@ -98,6 +98,7 @@ export function Hero() {
   const label = t(data.labelEn, data.labelNl || data.labelEn);
   const title = t(data.titleEn, data.titleNl || data.titleEn);
   const cta = t(data.ctaEn, data.ctaNl || data.ctaEn);
+  const cta2 = t(data.cta2En ?? '', data.cta2Nl || data.cta2En || '');
 
   return (
     <section className="hero" data-hero data-paused={paused} aria-label={title || 'JEIGHTEEN ATELIER'}>
@@ -107,10 +108,19 @@ export function Hero() {
       <div className="hero__caption">
         {label && <p className="hero__label">{label}</p>}
         <h1 className="hero__title">{title || 'JEIGHTEEN ATELIER'}</h1>
-        {cta && (
-          <Cta link={data.link} className="hero__cta">
-            {cta}
-          </Cta>
+        {(cta || cta2) && (
+          <div className="hero__ctas">
+            {cta && (
+              <Cta link={data.link} className="hero__cta">
+                {cta}
+              </Cta>
+            )}
+            {cta2 && (
+              <Cta link={data.link2} className="hero__cta">
+                {cta2}
+              </Cta>
+            )}
+          </div>
         )}
       </div>
 
@@ -137,6 +147,7 @@ export function Banner({ slot, layout }: { slot: Exclude<BannerSlot, 'hero'>; la
   const t = useT();
   const { data, failed, setFailed } = useBanner(slot);
   const [paused, setPaused] = useState(reducedMotion);
+  const [muted, setMuted] = useState(true);
 
   if (data.visible === false) return null;
 
@@ -149,15 +160,21 @@ export function Banner({ slot, layout }: { slot: Exclude<BannerSlot, 'hero'>; la
   return (
     <section className={`band band--${layout}`} data-paused={paused} aria-label={title || label || 'JEIGHTEEN ATELIER'}>
       <div className="band__visual">
-        <Media data={data} failed={failed} onFail={() => setFailed(true)} paused={paused} muted />
+        <Media data={data} failed={failed} onFail={() => setFailed(true)} paused={paused} muted={muted} />
         {layout !== 'split' && <div className="hero__scrim band__scrim" />}
         {isVideo && !failed && (
           <button type="button" className="hero__ctl hero__ctl--start" onClick={() => setPaused((p) => !p)} aria-label={paused ? t('Play film', 'Film afspelen') : t('Pause film', 'Film pauzeren')}>
             {paused ? <Play size={18} fill="currentColor" strokeWidth={0} /> : <Pause size={18} fill="currentColor" strokeWidth={0} />}
           </button>
         )}
+        {isVideo && !failed && layout === 'full' && (
+          <button type="button" className="hero__ctl hero__ctl--end" onClick={() => setMuted((m) => !m)} aria-label={muted ? t('Unmute film', 'Geluid aan') : t('Mute film', 'Geluid uit')}>
+            {muted ? <VolumeX size={20} strokeWidth={1.5} /> : <Volume2 size={20} strokeWidth={1.5} />}
+          </button>
+        )}
       </div>
 
+      {(label || title || text || cta) && (
       <div className="band__caption">
         {label && <p className="band__label">{label}</p>}
         {title && <h2 className="band__title">{title}</h2>}
@@ -168,6 +185,7 @@ export function Banner({ slot, layout }: { slot: Exclude<BannerSlot, 'hero'>; la
           </Cta>
         )}
       </div>
+      )}
     </section>
   );
 }

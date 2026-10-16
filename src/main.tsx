@@ -7,6 +7,7 @@ import './styles/base.css';
 import './styles/drawer.css';
 import './styles/landing.css';
 import './styles/atelier.css';
+import './styles/shop.css';
 import './styles/dashboard.css';
 
 createRoot(document.getElementById('root')!).render(

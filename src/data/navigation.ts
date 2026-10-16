@@ -1,6 +1,10 @@
+import { categories as shopCategories, categoryPath } from './categories';
+
 export interface NavItem {
   to: string;
   label: string;
+  /** Dutch label, when it differs. */
+  nl?: string;
 }
 
 /** The two sides of JEIGHTEEN. Shown in the banner (wide screens) or at the top of the menu (narrow screens). */
@@ -13,9 +17,9 @@ export type SitePath = '/atelier' | '/music';
 
 /**
  * Category pages per site, listed in that site's menu under "Home".
- * Empty until the category pages exist — add `{ to: '/atelier/prints', label: 'Prints' }` etc. here.
+ * ATELIER: one page per product kind (see data/categories.ts).
  */
 export const categories: Record<SitePath, readonly NavItem[]> = {
-  '/atelier': [],
+  '/atelier': shopCategories.map((c) => ({ to: categoryPath(c), label: c.en, nl: c.nl })),
   '/music': [],
 };

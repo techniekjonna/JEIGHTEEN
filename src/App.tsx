@@ -6,6 +6,8 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { LandingPage } from './pages/LandingPage';
 import { MusicPage } from './pages/MusicPage';
 import { AtelierPage } from './pages/atelier/AtelierPage';
+import { CategoryPage } from './pages/atelier/CategoryPage';
+import { ProductPage } from './pages/atelier/ProductPage';
 import { AtelierDashboard } from './pages/dashboard/AtelierDashboard';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/music" element={<MusicPage />} />
             <Route path="/atelier/dashboard" element={<AtelierDashboard />} />
+            <Route path="/atelier/product/:id" element={<ProductPage />} />
+            <Route path="/atelier/:slug" element={<CategoryPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

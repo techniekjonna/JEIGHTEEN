@@ -5,10 +5,11 @@ import { firebaseReady } from '../../lib/firebase';
 import { useT } from '../../i18n/LanguageContext';
 import { adminSignOut, useAdmin } from '../dashboard/useAdmin';
 import { SignInForm } from '../dashboard/SignInForm';
+import { MyAccount } from './MyAccount';
 
 /**
  * Sign-in panel, slides in from the left (the menu and bag come from the right).
- * Signed out: the login form. Signed in as an ATELIER admin: a button to the dashboard.
+ * Signed out: the login form. Signed in: My account (name, wishlist); ATELIER admins also get the dashboard button.
  */
 export function AccountDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const t = useT();
@@ -46,28 +47,16 @@ export function AccountDrawer({ open, onClose }: { open: boolean; onClose: () =>
     );
   } else if (status === 'signed-out') {
     body = <SignInForm sub={t('Sign in with your account.', 'Log in met je account.')} />;
-  } else if (status === 'denied') {
-    body = (
-      <div className="account">
-        <p className="account__text">
-          {t(`Signed in as ${email}. This account has no access to the atelier dashboard yet.`, `Ingelogd als ${email}. Dit account heeft nog geen toegang tot het atelier-dashboard.`)}
-        </p>
-        {uid && (
-          <p className="account__text">
-            {t('Your user ID (for the owner):', 'Je gebruikers-ID (voor de beheerder):')}{' '}
-            <code className="account__uid">{uid}</code>
-          </p>
-        )}
-        {signOut}
-      </div>
-    );
   } else {
     body = (
-      <div className="account">
-        <p className="account__text">{t(`Signed in as ${email}.`, `Ingelogd als ${email}.`)}</p>
-        {toDashboard}
-        {signOut}
-      </div>
+      <MyAccount
+        email={email}
+        uid={uid}
+        isAdmin={status === 'ok'}
+        dashboardButton={toDashboard}
+        signOutButton={signOut}
+        onClose={onClose}
+      />
     );
   }
 

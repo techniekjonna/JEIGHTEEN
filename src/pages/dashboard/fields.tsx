@@ -166,3 +166,76 @@ export function ImageField({
     </div>
   );
 }
+
+/** Extra photos for the product page: a row of thumbnails, each removable, plus an add button. */
+export function GalleryField({
+  brand,
+  label,
+  value,
+  onChange,
+  onBusy,
+}: {
+  brand: Brand;
+  label: string;
+  value: string[] | undefined;
+  onChange: (urls: string[]) => void;
+  onBusy: (busy: boolean) => void;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const photos = value ?? [];
+
+  const pick = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setError('');
+    setBusy(true);
+    onBusy(true);
+    try {
+      const added: string[] = [];
+      for (const file of Array.from(files)) added.push(await uploadImage(brand, file));
+      onChange([...photos, ...added]);
+    } catch (err) {
+      setError(friendlyError(err));
+    } finally {
+      setBusy(false);
+      onBusy(false);
+      if (input.current) input.current.value = '';
+    }
+  };
+
+  const move = (i: number, dir: -1 | 1) => {
+    const next = [...photos];
+    const j = i + dir;
+    if (j < 0 || j >= next.length) return;
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange(next);
+  };
+
+  return (
+    <div className="dfield">
+      <span className="dfield__label">{label}</span>
+      <div className="dgallery">
+        {photos.map((url, i) => (
+          <div key={url + i} className="dgallery__item">
+            <img src={url} alt={`Extra foto ${i + 1} van dit product`} />
+            <div className="dgallery__tools">
+              <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Foto ${i + 1} naar voren`}>‹</button>
+              <button type="button" onClick={() => onChange(photos.filter((_, k) => k !== i))} aria-label={`Foto ${i + 1} weghalen`}>
+                <X size={14} />
+              </button>
+              <button type="button" onClick={() => move(i, 1)} disabled={i === photos.length - 1} aria-label={`Foto ${i + 1} naar achteren`}>›</button>
+            </div>
+          </div>
+        ))}
+        <button type="button" className="dgallery__add" onClick={() => input.current?.click()} disabled={busy}>
+          {busy ? <Loader2 size={20} className="spin" /> : <ImagePlus size={20} strokeWidth={1.25} />}
+          <span>{busy ? 'Uploaden…' : 'Foto toevoegen'}</span>
+        </button>
+      </div>
+      <p className="dfield__hint">Voor de productpagina. De tweede foto verschijnt ook als je in de shop over het product beweegt.</p>
+      <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => pick(e.target.files)} />
+      {error && <p className="dform__error">{error}</p>}
+    </div>
+  );
+}

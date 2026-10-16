@@ -9,7 +9,10 @@ export interface Product extends Entry {
   /** Euros, cents allowed. */
   price: number;
   description?: string;
+  /** Main photo: shown in the grid and first on the product page. */
   image?: string;
+  /** Extra photos for the product page gallery (and the second photo on hover in the grid). */
+  images?: string[];
   /** Pieces left. Empty = no limit, 0 = sold out. */
   stock?: number;
 }
@@ -31,3 +34,9 @@ const cents = new Intl.NumberFormat('en-NL', { style: 'currency', currency: 'EUR
 export const formatPrice = (amount: number) => (Number.isInteger(amount) ? whole : cents).format(amount);
 
 export const isSoldOut = (p: Product) => p.stock === 0;
+
+/** All photos of a product, main photo first. */
+export const productPhotos = (p: Product): string[] => [p.image, ...(p.images ?? [])].filter((u): u is string => Boolean(u));
+
+/** Short reference shown on the product page, like a style number. */
+export const productRef = (p: Product) => `J18-${p.id.replace(/[^a-z0-9]/gi, '').slice(-6).toUpperCase()}`;

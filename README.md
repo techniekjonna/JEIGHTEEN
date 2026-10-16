@@ -46,10 +46,10 @@ In de UI worden ze als CSS-mask gebruikt (`Logo.tsx`, `Mark.tsx`), zodat ze de t
 ## Dashboards en Firebase
 
 ATELIER en MUSIC hebben elk een eigen dashboard, eigen collectie (`atelier_items`, `music_releases`), eigen fotomap in Storage (`atelier/`, `music/`) en eigen beheerdersrecht.
-Wie wat mag staat in Firestore: `admins/{uid}` met `brands: ['atelier']`, `['music']` of beide. Zie `firestore.rules` en `storage.rules`.
+Net als de JonnaRincon-site krijgt elk account vanzelf `users/{uid}` met `role: 'user'`. Zet `role` op `admin` in de Firebase-console om iemand het dashboard te geven. Zie `firestore.rules` en `storage.rules`.
 
 Zonder Firebase-config draait alles in proefmodus (localStorage, alleen in die browser).
 Koppelen: vul `src/lib/firebase.config.ts` of zet `VITE_FIREBASE_*` in Vercel. Daarna in Firebase: Authentication (e-mail/wachtwoord) aan,
-Firestore en Storage aanmaken (Storage vraagt het Blaze-abonnement), regels plaatsen, beheerder aanmaken en een `admins/{uid}`-document toevoegen.
+Firestore en Storage aanmaken (Storage vraagt het Blaze-abonnement), regels plaatsen, account maken via het inlogpaneel en daarna in Firestore bij `users` de `role` van dat account op `admin` zetten.
 
 `vercel.json` stuurt alle routes naar de app, zodat `/atelier/dashboard` ook na verversen werkt.

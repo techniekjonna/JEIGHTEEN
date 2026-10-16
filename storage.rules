@@ -1,11 +1,16 @@
 rules_version = '2';
 // Reserve storage (photos normally go to ownCloud). Files live in atelier/<map>/ and music/<map>/.
-// Everyone may view them; only that brand's admins may upload or delete.
+// Everyone may view them; only admins (Firestore users/{uid}.role == 'admin') may upload or delete.
 service firebase.storage {
   match /b/{bucket}/o {
+    // TESTFASE: true = every signed-in account may upload (open for development). Set to false before launch.
+    function testfase() {
+      return true;
+    }
     function canManage(brand) {
       return request.auth != null
-        && brand in firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.brands;
+        && brand in ['atelier', 'music']
+        && (testfase() || firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin');
     }
 
     match /{brand}/{path=**} {

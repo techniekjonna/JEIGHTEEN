@@ -94,7 +94,7 @@ function SlotForm({ slot, name }: { slot: BannerSlot; name: string }) {
     }
     setSaving(true);
     try {
-      await saveBanner(slot, { ...draft, link: draft.link?.trim() ?? '' });
+      await saveBanner(slot, { ...draft, link: draft.link?.trim() ?? '', link2: draft.link2?.trim() ?? '' });
       setMessage({ ok: true, text: `Opgeslagen. ${name} op de site is bijgewerkt.` });
     } catch (err) {
       setMessage({ ok: false, text: friendlyError(err) });
@@ -155,6 +155,21 @@ function SlotForm({ slot, name }: { slot: BannerSlot; name: string }) {
               placeholder="Bijv. /atelier/prints of https://…"
               hint="Leeg laten = de knop scrollt naar je collectie. Een leeg tekstveld wordt niet getoond. NL leeg = de Engelse tekst."
             />
+            {isMain && (
+              <>
+                <div className="dform__row">
+                  <TextField label="Tweede knop (EN)" value={draft.cta2En} onChange={(cta2En) => set({ cta2En })} placeholder="Optioneel, bijv. Discover the Prints" />
+                  <TextField label="Tweede knop (NL)" value={draft.cta2Nl} onChange={(cta2Nl) => set({ cta2Nl })} placeholder="Optioneel, bijv. Ontdek de prints" />
+                </div>
+                <TextField
+                  label="Link van de tweede knop (optioneel)"
+                  value={draft.link2}
+                  onChange={(link2) => set({ link2 })}
+                  placeholder="Bijv. /atelier/apparel"
+                  hint="Staat naast de eerste knop, zoals de twee linkjes bij Louis Vuitton. Leeg = geen tweede knop."
+                />
+              </>
+            )}
 
             {!isMain && (
               <Toggle
