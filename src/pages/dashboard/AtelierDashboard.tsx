@@ -2,6 +2,7 @@ import { formatPrice, productKinds, type Product } from '../../data/products';
 import { CollectionManager, type FormProps } from './CollectionManager';
 import { DashboardShell } from './DashboardShell';
 import { HeroSettings } from './HeroSettings';
+import { UserManager } from './UserManager';
 import { GalleryField, ImageField, NumberField, SelectField, TextField, Toggle } from './fields';
 
 function ProductForm({ brand, value, set, setUploading }: FormProps<Product>) {
@@ -41,6 +42,7 @@ export function AtelierDashboard() {
         Form={ProductForm}
       />
       <HeroSettings />
+      <UserManager />
     </DashboardShell>
   );
 }

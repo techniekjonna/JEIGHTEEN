@@ -561,3 +561,53 @@ textarea.dinput {
   text-align: center;
   border: 1px dashed var(--line);
 }
+
+/* Gebruikers: accounts en hun rol (user / admin) */
+.dusers__search {
+  width: min(320px, 100%);
+}
+.dusers__note {
+  margin: -12px 0 20px;
+}
+.dusers__row {
+  grid-template-columns: 44px 1fr auto;
+}
+.dusers__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.dusers__you {
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  color: var(--muted);
+}
+.dusers__role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dusers__select {
+  width: 160px;
+  padding-right: 36px;
+}
+.dusers__select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.dusers__msg {
+  margin-top: 16px;
+}
+@media (max-width: 640px) {
+  .dusers__row {
+    grid-template-columns: 44px 1fr;
+  }
+  .dusers__role {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: -6px;
+  }
+}
